@@ -3,12 +3,15 @@ name: SourceForge Backup
 on:
   workflow_dispatch:
     inputs:
-      sourceforge_url:
+      SOURCEFORGE_URL:
         description: "SourceForge download URL"
-      release_name:
+        required: true
+      RELEASE_NAME:
         description: "Release name"
-      tag_name:
+        required: true
+      TAG_NAME:
         description: "Release tag name"
+        required: true
 
 jobs:
   sourceforge_backup:
@@ -22,16 +25,18 @@ jobs:
 
       - name: Download from SourceForge
         run: |
-          wget -q --show-progress ${{ github.event.inputs.sourceforge_url }}
+          curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL }}
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
-        id: create_release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: "*.zip"
-          name: ${{ github.event.inputs.release_name }}
-          tag_name: ${{ github.event.inputs.tag_name }}
+          name: ${{ github.event.inputs.RELEASE_NAME }}
+          tag_name: ${{ github.event.inputs.TAG_NAME }}
           body: |
-            [SourceForge URL](${{ github.event.inputs.sourceforge_url }})
+            Rom: [${{ env.ZIP_FILE }}](${{ github.event.inputs.SOURCEFORGE_URL }})
+            SHA256: ${{ env.ZIP_FILE_SHA256 }}
