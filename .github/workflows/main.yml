@@ -5,6 +5,8 @@ on:
     inputs:
       sourceforge_url:
         description: "SourceForge download URL"
+      release_name:
+        description: "Release name"
       tag_name:
         description: "Release tag name"
 
@@ -23,12 +25,13 @@ jobs:
           wget -q --show-progress ${{ github.event.inputs.sourceforge_url }}
 
       - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: "*.zip"
-          name: ${{ github.ref_name }}
-          tag_name: ${{ github.ref }}
+          name: ${{ github.event.inputs.release_name }}
+          tag_name: ${{ github.event.inputs.tag_name }}
           body: |
-            [sourceforge_url](${{ github.event.inputs.sourceforge_url }})
+            [SourceForge URL](${{ github.event.inputs.sourceforge_url }})
