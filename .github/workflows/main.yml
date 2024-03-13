@@ -27,7 +27,7 @@ jobs:
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL }}
           echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA1=$(sha1sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -38,5 +38,9 @@ jobs:
           name: ${{ github.event.inputs.RELEASE_NAME }}
           tag_name: ${{ github.event.inputs.TAG_NAME }}
           body: |
-            Rom: [${{ env.ZIP_FILE }}](${{ github.event.inputs.SOURCEFORGE_URL }})
-            SHA256: ${{ env.ZIP_FILE_SHA256 }}
+            **File Name:** ${{ env.ZIP_FILE }}
+            **SHA1:** ${{ env.ZIP_FILE_SHA1 }}
+            **MD5:**
+            **Release Date:**
+            **Size:**
+            **Download URL:** ${{ github.event.inputs.SOURCEFORGE_URL }}
