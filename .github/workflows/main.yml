@@ -38,32 +38,32 @@ jobs:
       - name: Download from SourceForge 1
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_1 }}
-          echo "$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 2
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_2 }}
-          echo "$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 3
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_3 }}
-          echo "$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 4
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_4 }}
-          echo "$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 5
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_5 }}
-          echo "$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
