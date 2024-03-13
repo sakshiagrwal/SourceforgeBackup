@@ -38,56 +38,54 @@ jobs:
       - name: Download from SourceForge 1
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_1 }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "BASENAME_1=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "SHA256_1=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 2
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_2 }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "BASENAME_2=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "SHA256_2=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 3
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_3 }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "BASENAME_3=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "SHA256_3=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 4
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_4 }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "BASENAME_4=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "SHA256_4=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Download from SourceForge 5
         run: |
           curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL_5 }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "BASENAME_5=$(basename -a *.zip)" >> $GITHUB_ENV
+          echo "SHA256_5=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: |
-            ${{ env.BASENAME_1 }},
-            ${{ env.BASENAME_2 }},
-            ${{ env.BASENAME_3 }},
-            ${{ env.BASENAME_4 }},
-            ${{ env.BASENAME_5 }}
+          files: "*.zip"
           name: ${{ github.event.inputs.RELEASE_NAME }}
           tag_name: ${{ github.event.inputs.TAG_NAME }}
           body: |
-            Files:
-            - ${{ env.BASENAME_1 }}
-            - ${{ env.BASENAME_2 }}
-            - ${{ env.BASENAME_3 }}
-            - ${{ env.BASENAME_4 }}
-            - ${{ env.BASENAME_5 }}
-            SHA256:
-            - ${{ env.SHA256_1 }}
-            - ${{ env.SHA256_2 }}
-            - ${{ env.SHA256_3 }}
-            - ${{ env.SHA256_4 }}
-            - ${{ env.SHA256_5 }}
+            Filename: [${{ env.BASENAME_1 }}](${{ github.event.inputs.SOURCEFORGE_URL_1 }})
+            SHA256: ${{ env.SHA256_1 }}
+            ---
+            Filename: [${{ env.BASENAME_2 }}](${{ github.event.inputs.SOURCEFORGE_URL_2 }})
+            SHA256: ${{ env.SHA256_2 }}
+            ---
+            Filename: [${{ env.BASENAME_3 }}](${{ github.event.inputs.SOURCEFORGE_URL_3 }})
+            SHA256: ${{ env.SHA256_3 }}
+            ---
+            Filename: [${{ env.BASENAME_4 }}](${{ github.event.inputs.SOURCEFORGE_URL_4 }})
+            SHA256: ${{ env.SHA256_4 }}
+            ---
+            Filename: [${{ env.BASENAME_5 }}](${{ github.event.inputs.SOURCEFORGE_URL_5 }})
+            SHA256: ${{ env.SHA256_5 }}
+            
