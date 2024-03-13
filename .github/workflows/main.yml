@@ -3,8 +3,8 @@ name: SourceForge Backup
 on:
   workflow_dispatch:
     inputs:
-      SOURCEFORGE_URL:
-        description: "SourceForge download URL"
+      SOURCEFORGE_FOLDER_URL:
+        description: "SourceForge folder URL"
         required: true
       RELEASE_NAME:
         description: "Release name"
@@ -23,20 +23,31 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Extract Download Links
+        run: |
+          HTML=$(curl -sL "${{ github.event.inputs.SOURCEFORGE_FOLDER_URL }}")
+          DOWNLOAD_LINKS=$(echo "$HTML" | grep -oP 'href="[^"]+?/download"' | sed 's/href="//;s/"//')
+          echo "DOWNLOAD_LINKS=$DOWNLOAD_LINKS" >> $GITHUB_ENV
+
       - name: Download from SourceForge
         run: |
-          curl -LJO ${{ github.event.inputs.SOURCEFORGE_URL }}
-          echo "ZIP_FILE=$(basename -a *.zip)" >> $GITHUB_ENV
-          echo "ZIP_FILE_SHA256=$(sha256sum *.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          IFS=$'\n'
+          for LINK in ${{ env.DOWNLOAD_LINKS }}; do
+            FILE_NAME=$(basename "$LINK")
+            curl -LJO "${{ github.event.inputs.SOURCEFORGE_FOLDER_URL }}/$LINK"
+            echo "${FILE_NAME}: $(sha256sum "$FILE_NAME" | cut -d' ' -f1)" >> $GITHUB_ENV
+          done
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: "*.zip"
+          files: |
+            ${{ env.FILE_NAME }}
           name: ${{ github.event.inputs.RELEASE_NAME }}
           tag_name: ${{ github.event.inputs.TAG_NAME }}
           body: |
-            Rom: [${{ env.ZIP_FILE }}](${{ github.event.inputs.SOURCEFORGE_URL }})
-            SHA256: ${{ env.ZIP_FILE_SHA256 }}
+            Files:
+            ${{ env.FILE_NAME }}
+
