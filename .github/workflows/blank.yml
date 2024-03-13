@@ -1,4 +1,4 @@
-name: SourceForge Commit
+name: SourceForge Backup
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         description: "Release tag name"
 
 jobs:
-  auto_commit:
+  sourceforge_backup:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,7 +20,7 @@ jobs:
 
       - name: Download from SourceForge
         run: |
-          wget ${{ github.event.inputs.sourceforge_url }}
+          wget -q --show-progress ${{ github.event.inputs.sourceforge_url }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
